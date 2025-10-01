@@ -7,9 +7,14 @@ app.get("/", (c) => {
 });
 
 app.post("/appstore/webhook", async (c) => {
-  const body = await c.req.json();
-  console.log(body);
-  return c.text("Webhook received!");
+  try {
+    const body = await c.req.json();
+    console.log(body);
+    return c.text("Webhook received!");
+  } catch (error) {
+    console.error(error);
+    return c.text("Error receiving webhook!");
+  }
 });
 
 export default app;
