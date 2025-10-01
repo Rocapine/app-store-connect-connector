@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "app-store-connect-connector",
   "main": "src/index.ts",
-  "compatibility_date": "2025-10-01"
+  "compatibility_date": "2025-10-01",
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
@@ -31,8 +31,8 @@
   // "ai": {
   //   "binding": "AI"
   // },
-  // "observability": {
-  //   "enabled": true,
-  //   "head_sampling_rate": 1
-  // }
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
 }
