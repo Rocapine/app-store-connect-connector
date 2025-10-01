@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "ASCConnectorCollection",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}
