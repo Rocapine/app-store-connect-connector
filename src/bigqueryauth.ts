@@ -21,11 +21,16 @@ export async function bigQueryInsert(
     bigQueryDataset
   )}/tables/${encodeURIComponent(bigQueryTable)}/insertAll`;
 
-  const rows = [
-    {
-      json: rowJson,
-    },
-  ];
+  const body = {
+    kind: "bigquery#tableDataInsertAllRequest",
+    skipInvalidRows: true,
+    ignoreUnknownValues: true,
+    rows: [
+      {
+        json: rowJson,
+      },
+    ],
+  };
 
   const resp = await fetch(endpoint, {
     method: "POST",
@@ -33,12 +38,7 @@ export async function bigQueryInsert(
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      kind: "bigquery#tableDataInsertAllRequest",
-      rows,
-      skipInvalidRows: true,
-      ignoreUnknownValues: true,
-    }),
+    body: JSON.stringify(body),
   });
   if (!resp.ok) {
     const errText = await resp.text();

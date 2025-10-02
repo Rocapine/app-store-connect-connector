@@ -1,17 +1,15 @@
-import type { TransactionInfo } from "./types";
+import type { TransactionInfo, BigQueryNotificationRow } from "./types";
 
-
-
-export function buildBigQueryRow( TransactionInfo: TransactionInfo): Record<string, unknown> {
+export function buildBigQueryRow(
+  transactionInfo: TransactionInfo
+): BigQueryNotificationRow {
   return {
     receivedAt: new Date().toISOString(),
-    // signedTransactionInfo → prefixed with transaction_
-    transaction_originalTransactionId: TransactionInfo?.originalTransactionId ?? null,
-    transaction_bundleId: TransactionInfo?.bundleId ?? null,
-    transaction_appAppleId: TransactionInfo?.appAppleId ?? null,
-    transaction_subtype: TransactionInfo?.subtype ?? null,
-    transaction_notificationType: TransactionInfo?.notificationType ?? null,
+    originalTransactionId: transactionInfo.originalTransactionId,
+    "bundleId ": transactionInfo.bundleId, //TO REMOVE
+    bundleId: transactionInfo.bundleId,
+    appAppleId: transactionInfo.appAppleId,
+    subtype: transactionInfo.subtype,
+    notificationType: transactionInfo.notificationType,
   };
 }
-
-

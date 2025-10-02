@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import type { EnvBindings } from "./types";
 
 // Define your environment bindings interface
 interface Env {
@@ -21,7 +20,6 @@ app.get("/", (c) => {
 app.post("/appstore/webhook", async (c) => {
   try {
     const notification = await c.req.json();
-    console.log("Apple Server Notification received:", notification);
 
     let notificationType = null;
     let subtype = null;
@@ -36,7 +34,6 @@ app.post("/appstore/webhook", async (c) => {
         const payloadData = JSON.parse(
           atob(notification.signedPayload.split(".")[1])
         );
-        console.log("Decoded signedPayload:", payloadData);
 
         notificationType = payloadData.notificationType;
         subtype = payloadData.subtype;
@@ -97,20 +94,8 @@ app.post("/appstore/webhook", async (c) => {
     );
     return c.json({ ok: true });
   } catch (error) {
-    const err = error as any;
-    const stackLines =
-      typeof err?.stack === "string"
-        ? String(err.stack).split("\n").slice(0, 8)
-        : undefined;
-    return c.json(
-      {
-        ok: false,
-        error: String(err?.message ?? err),
-        name: String(err?.name ?? "Error"),
-        stack: stackLines,
-      },
-      500
-    );
+    console.error("Error inserting into BigQuery:", error);
+    return c.json({ ok: false }, 200);
   }
 });
 
