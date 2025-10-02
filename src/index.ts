@@ -3,10 +3,11 @@ import { Hono } from "hono";
 // Define your environment bindings interface
 interface Env {
   GOOGLE_CREDENTIALS_JSON?: string;
-  BQ_PROJECT_ID: "rocadata";
-  BQ_DATASET: "AppStoreConnect";
-  BQ_TABLE: "Notification";
+  BQ_PROJECT_ID: string;
+  BQ_DATASET: string;
+  BQ_TABLE: string;
 }
+
 
 const app: Hono<{ Bindings: Env }> = new Hono();
 
@@ -26,6 +27,7 @@ app.post("/appstore/webhook", async (c) => {
     let appAppleId = null;
     let bundleId = null;
     let originalTransactionId = null;
+    let offerDiscountType = null;
 
     // Handle new signedPayload format (App Store Server Notifications V2)
     if (notification.signedPayload) {
@@ -39,6 +41,7 @@ app.post("/appstore/webhook", async (c) => {
         subtype = payloadData.subtype;
         appAppleId = payloadData.data?.appAppleId;
         bundleId = payloadData.data?.bundleId;
+        offerDiscountType = payloadData.data?.offerDiscountType;
 
         // Decode the signedTransactionInfo to get originalTransactionId
         const signedTransactionInfo = payloadData.data?.signedTransactionInfo;
@@ -61,6 +64,7 @@ app.post("/appstore/webhook", async (c) => {
       subtype = notification.subtype;
       appAppleId = notification.data?.appAppleId;
       bundleId = notification.data?.bundleId;
+      offerDiscountType = notification.data?.offerDiscountType;
 
       const signedTransactionInfo = notification.data?.signedTransactionInfo;
       if (signedTransactionInfo) {
@@ -82,6 +86,9 @@ app.post("/appstore/webhook", async (c) => {
       appAppleId: appAppleId,
       subtype: subtype,
       notificationType: notificationType,
+      offerDiscountType: offerDiscountType,
+      signedPayload: notification.signedPayload,
+
     };
 
     const row = buildBigQueryRow(TransactionInfo);
@@ -99,7 +106,7 @@ app.post("/appstore/webhook", async (c) => {
   }
 });
 
-app.get("/testconfig", (c) => {
+app.get("/testconfig", async (c) => {
   // Access environment variables through c.env
   const googleCredentials = c.env.GOOGLE_CREDENTIALS_JSON;
 
