@@ -6,6 +6,12 @@ export type TransactionInfo = {
   notificationType: string;
   offerDiscountType: string;
   notificationUUID: string;
+  price: number;
+  currency: string;
+  productID: string;
+  transactionReason: string;
+  purchaseDate: string;
+  expireDate: string;
 };
 
 export type Notification = {
@@ -22,4 +28,10 @@ export type BigQueryNotificationRow = {
   bundleId: string;
   offerDiscountType: string;
   signedPayload: string;
+  price_in_currency: number;
+  currency: string;
+  productID: string;
+  transactionReason: string;
+  purchaseDate: string;
+  expireDate: string;
 };

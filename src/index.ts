@@ -27,6 +27,12 @@ app.post("/appstore/webhook", async (c) => {
     let originalTransactionId = null;
     let offerDiscountType = null;
     let notificationUUID = null;
+    let price = null;
+    let currency = null;
+    let productID = null;
+    let transactionReason = null;
+    let purchaseDate = null;
+    let expireDate = null;
 
     // Handle new signedPayload format (App Store Server Notifications V2)
     if (notification.signedPayload) {
@@ -50,6 +56,12 @@ app.post("/appstore/webhook", async (c) => {
           );
           originalTransactionId = transactionPayload.originalTransactionId;
           offerDiscountType = transactionPayload.offerDiscountType;
+          price = transactionPayload.price;
+          currency = transactionPayload.currency;
+          productID = transactionPayload.productID;
+          transactionReason = transactionPayload.transactionReason;
+          purchaseDate = transactionPayload.purchaseDate;
+          expireDate = transactionPayload.expireDate;
           console.log(
             "Extracted originalTransactionId:",
             originalTransactionId
@@ -58,30 +70,8 @@ app.post("/appstore/webhook", async (c) => {
       } catch (decodeError) {
         console.error("Error decoding signedPayload:", decodeError);
       }
-    } else {
-      // Handle old format (for backward compatibility)
-      notificationType = notification.notificationType;
-      subtype = notification.subtype;
-      appAppleId = notification.data?.appAppleId;
-      bundleId = notification.data?.bundleId;
-      offerDiscountType = notification.data?.offerDiscountType;
-      notificationUUID = notification.notificationUUID;
+    } 
 
-      const signedTransactionInfo = notification.data?.signedTransactionInfo;
-      if (signedTransactionInfo) {
-        try {
-          const payload = JSON.parse(atob(signedTransactionInfo.split(".")[1]));
-          originalTransactionId = payload.originalTransactionId;
-          offerDiscountType = payload.offerDiscountType;
-          console.log(
-            "Extracted originalTransactionId:",
-            originalTransactionId
-          );
-        } catch (decodeError) {
-          console.error("Error decoding transaction info:", decodeError);
-        }
-      }
-    }
     const transactionInfo = {
       originalTransactionId: originalTransactionId,
       bundleId: bundleId,
@@ -90,6 +80,12 @@ app.post("/appstore/webhook", async (c) => {
       notificationType: notificationType,
       offerDiscountType: offerDiscountType,
       notificationUUID: notificationUUID,
+      price: price,
+      currency: currency,
+      productID: productID,
+      transactionReason: transactionReason,
+      purchaseDate: purchaseDate,
+      expireDate: expireDate,
     };
 
     const row = buildBigQueryRow(transactionInfo, notification);

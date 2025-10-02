@@ -12,6 +12,12 @@ export function buildBigQueryRow(
     subtype: transactionInfo.subtype,
     notificationType: transactionInfo.notificationType,
     offerDiscountType: transactionInfo.offerDiscountType,
-    signedPayload: notification.signedPayload
+    signedPayload: notification.signedPayload,
+    price_in_currency: transactionInfo.price,
+    currency: transactionInfo.currency,
+    productID: transactionInfo.productID,
+    transactionReason: transactionInfo.transactionReason,
+    purchaseDate: transactionInfo.purchaseDate,
+    expireDate: transactionInfo.expireDate,
   };
 }
