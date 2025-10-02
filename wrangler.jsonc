@@ -6,7 +6,7 @@
   "vars": {
     "BQ_PROJECT_ID": "rocadata",
     "BQ_DATASET": "AppStoreConnect",
-    "BQ_TABLE": "Notification"
+    "BQ_TABLE": "NotificationTest"
   },
   // "compatibility_flags": [
   //   "nodejs_compat"
