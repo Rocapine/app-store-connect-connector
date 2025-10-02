@@ -3,12 +3,14 @@
   "name": "app-store-connect-connector",
   "main": "src/index.ts",
   "compatibility_date": "2025-10-01",
+  "vars": {
+    "BQ_PROJECT_ID": "rocadata",
+    "BQ_DATASET": "AppStoreConnect",
+    "BQ_TABLE": "Notification"
+  },
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
-  // "vars": {
-  //   "MY_VAR": "my-variable"
-  // },
   // "kv_namespaces": [
   //   {
   //     "binding": "MY_KV_NAMESPACE",
