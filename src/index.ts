@@ -8,7 +8,6 @@ interface Env {
   BQ_TABLE: string;
 }
 
-
 const app: Hono<{ Bindings: Env }> = new Hono();
 
 import { bigQueryInsert } from "./bigqueryauth";
@@ -90,7 +89,7 @@ app.post("/appstore/webhook", async (c) => {
       subtype: subtype,
       notificationType: notificationType,
       offerDiscountType: offerDiscountType,
-      notificationUUID: notificationUUID
+      notificationUUID: notificationUUID,
     };
 
     const row = buildBigQueryRow(transactionInfo, notification);
