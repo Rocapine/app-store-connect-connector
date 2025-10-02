@@ -1,7 +1,7 @@
-import type { TransactionInfo, BigQueryNotificationRow,Notification } from "./types";
+import type { TransactionInfo, BigQueryNotificationRow,Notification,RenewalInfo } from "./types";
 
 export function buildBigQueryRow(
-  transactionInfo: TransactionInfo, notification: Notification
+  transactionInfo: TransactionInfo,renewalInfo: RenewalInfo, notification: Notification
 ): BigQueryNotificationRow {
   return {
     receivedAt: new Date().toISOString(),
@@ -14,10 +14,14 @@ export function buildBigQueryRow(
     offerDiscountType: transactionInfo.offerDiscountType,
     signedPayload: notification.signedPayload,
     price_in_currency: transactionInfo.price,
-    currency: transactionInfo.currency,
+    currency: transactionInfo.transactionCurrency,
     productID: transactionInfo.productID,
     transactionReason: transactionInfo.transactionReason,
     purchaseDate: transactionInfo.purchaseDate,
     expireDate: transactionInfo.expireDate,
+    renewalDate: renewalInfo.renewalDate,
+    renewalPrice: renewalInfo.renewalPrice,
+    renewalCurrency: renewalInfo.renewalCurrency,
+    offerPeriod: transactionInfo.offerPeriod,
   };
 }

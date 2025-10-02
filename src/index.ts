@@ -28,11 +28,16 @@ app.post("/appstore/webhook", async (c) => {
     let offerDiscountType = null;
     let notificationUUID = null;
     let price = null;
-    let currency = null;
+    let transactionCurrency = null;
     let productID = null;
     let transactionReason = null;
     let purchaseDate = null;
     let expireDate = null;
+    let offerPeriod = null;
+    let renewalDate = null;
+    let renewalPrice = null;
+    let renewalCurrency = null;
+
 
     // Handle new signedPayload format (App Store Server Notifications V2)
     if (notification.signedPayload) {
@@ -57,15 +62,25 @@ app.post("/appstore/webhook", async (c) => {
           originalTransactionId = transactionPayload.originalTransactionId;
           offerDiscountType = transactionPayload.offerDiscountType;
           price = transactionPayload.price;
-          currency = transactionPayload.currency;
+          transactionCurrency = transactionPayload.transactionCurrency;
           productID = transactionPayload.productID;
           transactionReason = transactionPayload.transactionReason;
           purchaseDate = transactionPayload.purchaseDate;
           expireDate = transactionPayload.expireDate;
+          offerPeriod = transactionPayload.offerPeriod;
           console.log(
             "Extracted originalTransactionId:",
             originalTransactionId
           );
+        }
+        const signedRenewalInfo = payloadData.data?.signedRenewalInfo;
+        if (signedRenewalInfo) {
+          const renewalPayload = JSON.parse(
+            atob(signedRenewalInfo.split(".")[1])
+          );
+          renewalDate = renewalPayload.renewalDate;
+          renewalPrice = renewalPayload.renewalPrice;
+          renewalCurrency = renewalPayload.renewalCurrency;
         }
       } catch (decodeError) {
         console.error("Error decoding signedPayload:", decodeError);
@@ -81,14 +96,21 @@ app.post("/appstore/webhook", async (c) => {
       offerDiscountType: offerDiscountType,
       notificationUUID: notificationUUID,
       price: price,
-      currency: currency,
+      transactionCurrency: transactionCurrency,
       productID: productID,
       transactionReason: transactionReason,
       purchaseDate: purchaseDate,
       expireDate: expireDate,
+      offerPeriod: offerPeriod,
     };
 
-    const row = buildBigQueryRow(transactionInfo, notification);
+    const renewalInfo = {
+      renewalDate: renewalDate,
+      renewalPrice: renewalPrice,
+      renewalCurrency: renewalCurrency,
+    };
+
+    const row = buildBigQueryRow(transactionInfo, renewalInfo, notification);
     await bigQueryInsert(
       c.env.BQ_PROJECT_ID,
       c.env.BQ_DATASET,
@@ -109,6 +131,9 @@ app.get("/testconfig", async (c) => {
 
   return c.json({
     googleCredentialsPresent: !!googleCredentials,
+    bqProjectId: c.env.BQ_PROJECT_ID,
+    bqDataset: c.env.BQ_DATASET,
+    bqTable: c.env.BQ_TABLE,
   });
 });
 
