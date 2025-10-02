@@ -5,6 +5,10 @@ export type TransactionInfo = {
   subtype: string;
   notificationType: string;
   offerDiscountType: string;
+  notificationUUID: string;
+};
+
+export type Notification = {
   signedPayload: string;
 };
 

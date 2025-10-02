@@ -21,13 +21,13 @@ app.get("/", (c) => {
 app.post("/appstore/webhook", async (c) => {
   try {
     const notification = await c.req.json();
-
     let notificationType = null;
     let subtype = null;
     let appAppleId = null;
     let bundleId = null;
     let originalTransactionId = null;
     let offerDiscountType = null;
+    let notificationUUID = null;
 
     // Handle new signedPayload format (App Store Server Notifications V2)
     if (notification.signedPayload) {
@@ -41,7 +41,7 @@ app.post("/appstore/webhook", async (c) => {
         subtype = payloadData.subtype;
         appAppleId = payloadData.data?.appAppleId;
         bundleId = payloadData.data?.bundleId;
-        offerDiscountType = payloadData.data?.offerDiscountType;
+        notificationUUID = payloadData.notificationUUID;
 
         // Decode the signedTransactionInfo to get originalTransactionId
         const signedTransactionInfo = payloadData.data?.signedTransactionInfo;
@@ -50,6 +50,7 @@ app.post("/appstore/webhook", async (c) => {
             atob(signedTransactionInfo.split(".")[1])
           );
           originalTransactionId = transactionPayload.originalTransactionId;
+          offerDiscountType = transactionPayload.offerDiscountType;
           console.log(
             "Extracted originalTransactionId:",
             originalTransactionId
@@ -65,12 +66,14 @@ app.post("/appstore/webhook", async (c) => {
       appAppleId = notification.data?.appAppleId;
       bundleId = notification.data?.bundleId;
       offerDiscountType = notification.data?.offerDiscountType;
+      notificationUUID = notification.notificationUUID;
 
       const signedTransactionInfo = notification.data?.signedTransactionInfo;
       if (signedTransactionInfo) {
         try {
           const payload = JSON.parse(atob(signedTransactionInfo.split(".")[1]));
           originalTransactionId = payload.originalTransactionId;
+          offerDiscountType = payload.offerDiscountType;
           console.log(
             "Extracted originalTransactionId:",
             originalTransactionId
@@ -80,18 +83,17 @@ app.post("/appstore/webhook", async (c) => {
         }
       }
     }
-    const TransactionInfo = {
+    const transactionInfo = {
       originalTransactionId: originalTransactionId,
       bundleId: bundleId,
       appAppleId: appAppleId,
       subtype: subtype,
       notificationType: notificationType,
       offerDiscountType: offerDiscountType,
-      signedPayload: notification.signedPayload,
-
+      notificationUUID: notificationUUID
     };
 
-    const row = buildBigQueryRow(TransactionInfo);
+    const row = buildBigQueryRow(transactionInfo, notification);
     await bigQueryInsert(
       c.env.BQ_PROJECT_ID,
       c.env.BQ_DATASET,
