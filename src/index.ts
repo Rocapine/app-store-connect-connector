@@ -29,7 +29,7 @@ app.post("/appstore/webhook", async (c) => {
     let notificationUUID = null;
     let price = null;
     let transactionCurrency = null;
-    let productID = null;
+    let productId = null;
     let transactionReason = null;
     let purchaseDate = null;
     let expireDate = null;
@@ -37,6 +37,7 @@ app.post("/appstore/webhook", async (c) => {
     let renewalDate = null;
     let renewalPrice = null;
     let renewalCurrency = null;
+    let renewalProductId = null;
 
 
     // Handle new signedPayload format (App Store Server Notifications V2)
@@ -62,11 +63,11 @@ app.post("/appstore/webhook", async (c) => {
           originalTransactionId = transactionPayload.originalTransactionId;
           offerDiscountType = transactionPayload.offerDiscountType;
           price = transactionPayload.price;
-          transactionCurrency = transactionPayload.transactionCurrency;
-          productID = transactionPayload.productID;
+          transactionCurrency = transactionPayload.currency;
+          productId = transactionPayload.productId;
           transactionReason = transactionPayload.transactionReason;
           purchaseDate = transactionPayload.purchaseDate;
-          expireDate = transactionPayload.expireDate;
+          expireDate = transactionPayload.expiresDate;
           offerPeriod = transactionPayload.offerPeriod;
           console.log(
             "Extracted originalTransactionId:",
@@ -80,7 +81,8 @@ app.post("/appstore/webhook", async (c) => {
           );
           renewalDate = renewalPayload.renewalDate;
           renewalPrice = renewalPayload.renewalPrice;
-          renewalCurrency = renewalPayload.renewalCurrency;
+          renewalCurrency = renewalPayload.currency;
+          renewalProductId = renewalPayload.renewalProductId;
         }
       } catch (decodeError) {
         console.error("Error decoding signedPayload:", decodeError);
@@ -97,7 +99,7 @@ app.post("/appstore/webhook", async (c) => {
       notificationUUID: notificationUUID,
       price: price,
       transactionCurrency: transactionCurrency,
-      productID: productID,
+      productId: productId,
       transactionReason: transactionReason,
       purchaseDate: purchaseDate,
       expireDate: expireDate,
@@ -108,6 +110,7 @@ app.post("/appstore/webhook", async (c) => {
       renewalDate: renewalDate,
       renewalPrice: renewalPrice,
       renewalCurrency: renewalCurrency,
+      renewalProductId: renewalProductId,
     };
 
     const row = buildBigQueryRow(transactionInfo, renewalInfo, notification);

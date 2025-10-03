@@ -8,7 +8,7 @@ export type TransactionInfo = {
   notificationUUID: string;
   price: number;
   transactionCurrency: string;
-  productID: string;
+  productId: string;
   transactionReason: string;
   purchaseDate: string;
   expireDate: string;
@@ -19,6 +19,7 @@ export type RenewalInfo = {
   renewalDate: string;
   renewalPrice: number;
   renewalCurrency: string;
+  renewalProductId: string;
 };
 
 export type Notification = {
@@ -37,11 +38,12 @@ export type BigQueryNotificationRow = {
   signedPayload: string;
   price_in_currency: number;
   currency: string;
-  productID: string;
+  productId: string;
   transactionReason: string;
   purchaseDate: string;
   expireDate: string;
   renewalDate: string;
+  renewalProductId: string;
   renewalPrice: number;
   renewalCurrency: string;
   offerPeriod: string;
