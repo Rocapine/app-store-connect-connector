@@ -87,7 +87,7 @@ app.post("/appstore/webhook", async (c) => {
           renewalDate = renewalPayload.renewalDate;
           renewalPrice = renewalPayload.renewalPrice;
           renewalCurrency = renewalPayload.currency;
-          renewalProductId = renewalPayload.renewalProductId;
+          renewalProductId = renewalPayload.productId;
         }
       } catch (decodeError) {
         console.error("Error decoding signedPayload:", decodeError);
