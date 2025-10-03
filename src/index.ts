@@ -99,7 +99,7 @@ app.post("/appstore/webhook", async (c) => {
       bundleId: bundleId,
       appAppleId: appAppleId,
       subtype: subtype,
-      originalPurchaseDate: originalPurchaseDate,
+      originalPurchaseDate: new Date(originalPurchaseDate).toISOString(),
       notificationType: notificationType,
       offerDiscountType: offerDiscountType,
       notificationUUID: notificationUUID,
