@@ -17,7 +17,7 @@ export type TransactionInfo = {
 
 export type RenewalInfo = {
   renewalDate: string;
-  renewalPrice: number;
+  renewalPrice: string;
   renewalCurrency: string;
   renewalProductId: string;
 };
@@ -44,7 +44,7 @@ export type BigQueryNotificationRow = {
   expireDate: string;
   renewalDate: string;
   renewalProductId: string;
-  renewalPrice: number;
+  renewalPrice: string;
   renewalCurrency: string;
   offerPeriod: string;
 };

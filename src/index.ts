@@ -101,16 +101,16 @@ app.post("/appstore/webhook", async (c) => {
       transactionCurrency: transactionCurrency,
       productId: productId,
       transactionReason: transactionReason,
-      purchaseDate: purchaseDate,
-      expireDate: expireDate,
+      purchaseDate: new Date(purchaseDate).toISOString(),
+      expireDate: new Date(expireDate).toISOString(),
       offerPeriod: offerPeriod,
     };
 
     const renewalInfo = {
-      renewalDate: renewalDate,
+      renewalDate: new Date(renewalDate).toISOString(),
       renewalPrice: renewalPrice,
       renewalCurrency: renewalCurrency,
-      renewalProductId: renewalProductId,
+      renewalProductId: productId,
     };
 
     const row = buildBigQueryRow(transactionInfo, renewalInfo, notification);
