@@ -5,9 +5,11 @@ export function buildBigQueryRow(
 ): BigQueryNotificationRow {
   return {
     receivedAt: new Date().toISOString(),
+    firstTransactionDate: transactionInfo.originalPurchaseDate,
     originalTransactionId: transactionInfo.originalTransactionId,
     notificationUUID: transactionInfo.notificationUUID,
     bundleId: transactionInfo.bundleId,
+    countryCode: transactionInfo.storefront,
     appAppleId: transactionInfo.appAppleId,
     subtype: transactionInfo.subtype,
     notificationType: transactionInfo.notificationType,

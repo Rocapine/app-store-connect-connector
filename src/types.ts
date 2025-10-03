@@ -13,6 +13,8 @@ export type TransactionInfo = {
   purchaseDate: string;
   expireDate: string;
   offerPeriod: string;
+  storefront: string;
+  originalPurchaseDate: string;
 };
 
 export type RenewalInfo = {
@@ -47,4 +49,6 @@ export type BigQueryNotificationRow = {
   renewalPrice: string;
   renewalCurrency: string;
   offerPeriod: string;
+  countryCode: string;
+  firstTransactionDate: string;
 };
